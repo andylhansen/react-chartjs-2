@@ -72,9 +72,8 @@ const ChartComponent = React.createClass({
 		
 		if (!this.chart_instance) return;
 		
-		this.chart_instance.options.scales.xAxes[0].ticks.min = options.scales.xAxes[0].ticks.min;
-		this.chart_instance.options.scales.xAxes[0].ticks.max = options.scales.xAxes[0].ticks.max;
-		this.chart_instance.options.scales.xAxes[0].fixedBarWidth = options.scales.xAxes[0].fixedBarWidth;
+		var helpers = Chart.helpers;
+		this.chart_instance.options = helpers.configMerge(this.chart_instance.options, options);
 		
 		data.datasets.forEach((dataset, index) => {
 			this.chart_instance.data.datasets[index].backgroundColor = dataset.backgroundColor;
