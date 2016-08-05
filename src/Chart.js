@@ -1,23 +1,51 @@
-import React, {PropTypes} from 'react';
-import ReactDOM from 'react-dom';
-import Chart from 'chart.js';
-import deepEqual from './utils/deepEqual';
+'use strict';
 
-const ChartComponent = React.createClass({
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.Doughnut = Doughnut;
+exports.Pie = Pie;
+exports.Line = Line;
+exports.Bar = Bar;
+exports.Radar = Radar;
+exports.Polar = Polar;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _chartJs = require('chart.js');
+
+var _chartJs2 = _interopRequireDefault(_chartJs);
+
+var _utilsDeepEqual = require('./utils/deepEqual');
+
+var _utilsDeepEqual2 = _interopRequireDefault(_utilsDeepEqual);
+
+var ChartComponent = _react2['default'].createClass({
 
 	displayName: 'ChartComponent',
 
 	propTypes: {
-		data: PropTypes.object.isRequired,
-		height: PropTypes.number,
-		legend: PropTypes.object,
-		options: PropTypes.object,
-		redraw: PropTypes.bool,
-		type: PropTypes.oneOf(['doughnut', 'pie', 'line', 'bar', 'radar', 'polarArea']),
-		width: PropTypes.number
+		data: _react.PropTypes.object.isRequired,
+		height: _react.PropTypes.number,
+		legend: _react.PropTypes.object,
+		options: _react.PropTypes.object,
+		redraw: _react.PropTypes.bool,
+		type: _react.PropTypes.oneOf(['doughnut', 'pie', 'line', 'bar', 'radar', 'polarArea']),
+		width: _react.PropTypes.number
 	},
 
-	getDefaultProps() {
+	getDefaultProps: function getDefaultProps() {
 		return {
 			legend: {
 				display: true,
@@ -30,15 +58,15 @@ const ChartComponent = React.createClass({
 		};
 	},
 
-	componentWillMount() {
+	componentWillMount: function componentWillMount() {
 		this.chart_instance = undefined;
 	},
 
-	componentDidMount() {
+	componentDidMount: function componentDidMount() {
 		this.renderChart();
 	},
 
-	componentDidUpdate() {
+	componentDidUpdate: function componentDidUpdate() {
 		if (this.props.redraw) {
 			this.chart_instance.destroy();
 			this.renderChart();
@@ -47,7 +75,7 @@ const ChartComponent = React.createClass({
 		}
 	},
 
-	_objectWithoutProperties (obj, keys) {
+	_objectWithoutProperties: function _objectWithoutProperties(obj, keys) {
 		var target = {};
 		for (var i in obj) {
 			if (keys.indexOf(i) >= 0) continue;
@@ -57,76 +85,88 @@ const ChartComponent = React.createClass({
 		return target;
 	},
 
-	shouldComponentUpdate(nextProps, nextState) {
-		const compareNext = this._objectWithoutProperties(nextProps, ["id", "width", "height"]);
-		const compareNow = this._objectWithoutProperties(this.props, ["id", "width", "height"]);
-		return !deepEqual(compareNext, compareNow, {strict: true});
+	shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+		var compareNext = this._objectWithoutProperties(nextProps, ['id', 'width', 'height']);
+		var compareNow = this._objectWithoutProperties(this.props, ['id', 'width', 'height']);
+		return !(0, _utilsDeepEqual2['default'])(compareNext, compareNow, { strict: true });
 	},
 
-	componentWillUnmount() {
+	componentWillUnmount: function componentWillUnmount() {
 		this.chart_instance.destroy();
 	},
 
-	updateChart() {
-		const {data, options} = this.props;
-		
+	updateChart: function updateChart() {
+		var _this = this;
+
+		var _props = this.props;
+		var data = _props.data;
+		var options = _props.options;
+
 		if (!this.chart_instance) return;
-		
-		var helpers = Chart.helpers;
-		this.chart_instance.options = helpers.configMerge(this.chart_instance.options, options);
-		
-		data.datasets.forEach((dataset, index) => {
-			this.chart_instance.data.datasets[index].backgroundColor = dataset.backgroundColor;
+
+		if (options) {
+			this.chart_instance.options = _chartJs2['default'].helpers.configMerge(this.chart_instance.options, options);
+		}
+
+		this.chart_instance.config.data.labels = data.labels;
+
+		data.datasets.forEach(function (dataset, index) {
+			_this.chart_instance.data.datasets[index] = dataset;
 		});
-		
+
 		this.chart_instance.update();
 	},
 
-	renderChart() {
-		const {data, options, legend, type} = this.props;
-		const node = ReactDOM.findDOMNode(this);
+	renderChart: function renderChart() {
+		var _props2 = this.props;
+		var data = _props2.data;
+		var options = _props2.options;
+		var legend = _props2.legend;
+		var type = _props2.type;
 
-		this.chart_instance = new Chart(node, {
-			type,
-			data,
-			options
+		var node = _reactDom2['default'].findDOMNode(this);
+
+		this.chart_instance = new _chartJs2['default'](node, {
+			type: type,
+			data: data,
+			options: options
 		});
 	},
 
-	render() {
-		const {height, width} = this.props;
+	render: function render() {
+		var _props3 = this.props;
+		var height = _props3.height;
+		var width = _props3.width;
 
-		return (
-			<canvas
-				height={height}
-				width={width}
-			/>
-		);
+		return _react2['default'].createElement('canvas', {
+			height: height,
+			width: width
+		});
 	}
 });
 
-export default ChartComponent;
+exports['default'] = ChartComponent;
 
-export function Doughnut (props) {
-	return <ChartComponent {...props} type='doughnut' />;
+function Doughnut(props) {
+	return _react2['default'].createElement(ChartComponent, _extends({}, props, { type: 'doughnut' }));
 }
 
-export function Pie (props) {
-	return <ChartComponent {...props} type='pie' />;
+function Pie(props) {
+	return _react2['default'].createElement(ChartComponent, _extends({}, props, { type: 'pie' }));
 }
 
-export function Line (props) {
-	return <ChartComponent {...props} type='line' />;
+function Line(props) {
+	return _react2['default'].createElement(ChartComponent, _extends({}, props, { type: 'line' }));
 }
 
-export function Bar (props) {
-	return <ChartComponent {...props} type='bar' />;
+function Bar(props) {
+	return _react2['default'].createElement(ChartComponent, _extends({}, props, { type: 'bar' }));
 }
 
-export function Radar (props) {
-	return <ChartComponent {...props} type='radar' />;
+function Radar(props) {
+	return _react2['default'].createElement(ChartComponent, _extends({}, props, { type: 'radar' }));
 }
 
-export function Polar (props) {
-	return <ChartComponent {...props} type='polarArea' />;
+function Polar(props) {
+	return _react2['default'].createElement(ChartComponent, _extends({}, props, { type: 'polarArea' }));
 }
